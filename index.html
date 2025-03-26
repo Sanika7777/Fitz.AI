@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Sage - Outfit Analyzer</title>
+    <style>
+        :root {
+            --primary-pink: #f5e6f0;
+            --primary-blue: #e6f3f5;
+            --primary-green: #e6f5ed;
+            --primary-orange: #f5eee6;
+            --font-color: #333333;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-blue) 100%);
+            color: var(--font-color);
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'APTOS', Arial, sans-serif;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'APTOS', Arial, sans-serif;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            color: var(--font-color);
+            border: 2px solid var(--primary-pink);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #imagePreview {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin: 1rem 0;
+            border: 4px solid white;
+        }
+
+        select {
+            padding: 12px;
+            border-radius: 30px;
+            border: 2px solid var(--primary-pink);
+            font-family: 'APTOS', Arial, sans-serif;
+            margin: 1rem 0;
+            width: 80%;
+        }
+
+        .result-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .loading {
+            display: none;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Style Sage ✨</h1>
+        
+        <div class="upload-section">
+            <div class="button-group">
+                <button onclick="document.getElementById('fileInput').click()">📁 Upload Photo</button>
+                <button onclick="capturePhoto()">📸 Take Photo</button>
+            </div>
+            
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            
+            <select id="occasion">
+                <option value="">Select Occasion</option>
+                <option value="business">Business Meeting</option>
+                <option value="casual">Casual Outing</option>
+                <option value="sports">Sports Event</option>
+                <option value="party">Party/Evening</option>
+            </select>
+            
+            <img id="imagePreview" alt="Preview">
+            
+            <div class="button-group">
+                <button onclick="analyzeOutfit()" id="analyzeBtn" disabled>Analyze Outfit</button>
+                <button onclick="startAgain()" id="resetBtn">Start Again</button>
+            </div>
+        </div>
+
+        <div class="loading">Analyzing your outfit... ⏳</div>
+        
+        <div class="result-section" id="resultSection">
+            <h2>Styling Suggestions 🎩</h2>
+            <p id="suggestions"></p>
+        </div>
+    </div>
+
+    <script>
+        const imagePreview = document.getElementById('imagePreview');
+        const fileInput = document.getElementById('fileInput');
+        const occasionSelect = document.getElementById('occasion');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultSection = document.getElementById('resultSection');
+        const loading = document.querySelector('.loading');
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            handleImage(file);
+        });
+
+        function capturePhoto() {
+            // Implement camera capture functionality
+            alert("Camera functionality requires device integration");
+        }
+
+        function handleImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                checkAnalysisReady();
+            }
+            reader.readAsDataURL(file);
+        }
+
+        occasionSelect.addEventListener('change', checkAnalysisReady);
+
+        function checkAnalysisReady() {
+            analyzeBtn.disabled = !(imagePreview.src && imagePreview.src !== window.location.href && occasionSelect.value);
+        }
+
+        function analyzeOutfit() {
+            loading.style.display = 'block';
+            resultSection.style.display = 'none';
+            
+            // Simulated analysis (replace with actual AI processing)
+            setTimeout(() => {
+                loading.style.display = 'none';
+                resultSection.style.display = 'block';
+                displaySuggestions();
+            }, 2000);
+        }
+
+        function displaySuggestions() {
+            const occasion = occasionSelect.value;
+            const suggestions = {
+                business: [
+                    "Add a structured blazer for more authority",
+                    "Pair with leather loafers and a slim briefcase",
+                    "Incorporate a silk pocket square",
+                    "Opt for monochromatic accessories"
+                ],
+                casual: [
+                    "Layer with an oversized denim jacket",
+                    "Add statement sneakers in bold colors",
+                    "Try a crossbody bag for practicality",
+                    "Mix textures with a chunky knit sweater"
+                ],
+                sports: [
+                    "Add moisture-wicking compression layers",
+                    "Pair with reflective accessories for visibility",
+                    "Consider breathable mesh panels",
+                    "Complete with supportive arch footwear"
+                ],
+                party: [
+                    "Add metallic accessories for glamour",
+                    "Layer delicate gold jewelry",
+                    "Try a clutch with crystal details",
+                    "Add sheer layers for dimension"
+                ]
+            };
+
+            const colorPalette = ["Dusty Rose", "Misty Blue", "Sage Green", "Warm Taupe"][Math.floor(Math.random()*4)];
+            const text = `Based on 2025 trends and your ${occasion} needs:
+                <ul>
+                    ${suggestions[occasion].map(s => `<li>${s}</li>`).join('')}
+                </ul>
+                Recommended color accents: ${colorPalette}`;
+            
+            document.getElementById('suggestions').innerHTML = text;
+        }
+
+        function startAgain() {
+            imagePreview.src = '';
+            occasionSelect.value = '';
+            analyzeBtn.disabled = true;
+            resultSection.style.display = 'none';
+            fileInput.value = '';
+        }
+    </script>
+</body>
+</html>
